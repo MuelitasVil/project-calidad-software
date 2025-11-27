@@ -25,7 +25,7 @@ def list_periods(
             "list": "all"
         }
     }
-    send_message_to_sqs(message)
+    ##send_message_to_sqs(message)
     return PeriodService.get_all(session)
 
 
@@ -44,7 +44,7 @@ def get_period(
             "cod_period": cod_period
         }
     }
-    send_message_to_sqs(message)
+    ##send_message_to_sqs(message)
     return period
 
 
@@ -63,7 +63,7 @@ def create_period(
             "description": getattr(period_created, "description", None),
         }
     }
-    send_message_to_sqs(message)
+    ##send_message_to_sqs(message)
     return period_created
 
 
@@ -84,7 +84,7 @@ def update_period(
             "cod_period": cod_period
         }
     }
-    send_message_to_sqs(message)
+    ##send_message_to_sqs(message)
     return updated
 
 
@@ -103,4 +103,4 @@ def delete_period(
             "cod_period": cod_period
         }
     }
-    send_message_to_sqs(message)
+    ##send_message_to_sqs(message)
