@@ -1,0 +1,129 @@
+services:
+  # ============================================
+  # MySQL Database
+  # ============================================
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-local
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: teamb321**
+      MYSQL_DATABASE: dned
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./users/db/00-change-auth-plugin.sql:/docker-entrypoint-initdb.d/00-change-auth-plugin.sql
+      - ./users/db/delete_and_create_tables.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./users/db/create_tables.sql:/docker-entrypoint-initdb.d/02-tables.sql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # DynamoDB Local (DEPRECATED - usar LocalStack en su lugar)
+  # ============================================
+  # dynamodb-local:
+  #   image: amazon/dynamodb-local:latest
+  #   container_name: dynamodb-local
+  #   ports:
+  #     - "8002:8000"
+  #   volumes:
+  #     - dynamodb_data:/home/dynamodblocal/data
+  #   networks:
+  #     - app-network
+  #   command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "curl -sS -o /dev/null http://localhost:8000 || exit 1"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 10
+
+  # ============================================
+  # Auth Service
+  # ============================================
+  auth-service:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    container_name: auth-service
+    ports:
+      - "8000:8000"
+    environment:
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - DYNAMODB_ENDPOINT_URL=http://localstack:4566
+    depends_on:
+      localstack:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # ============================================
+  # Users Service
+  # ============================================
+  users-service:
+    build:
+      context: ./users
+      dockerfile: Dockerfile
+    container_name: users-service
+    ports:
+      - "8001:8001"
+    environment:
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=teamb321**
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=dned
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - DYNAMODB_ENDPOINT_URL=http://localstack:4566
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # ============================================
+  # LocalStack (AWS services emulator with DynamoDB UI)
+  # ============================================
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566"            # LocalStack Gateway (API endpoints)
+      - "4510-4559:4510-4559"  # External services port range
+    environment:
+      - SERVICES=dynamodb
+      - DEBUG=1
+      - DATA_DIR=/var/lib/localstack/data
+      - DYNAMODB_SHARE_DB=1
+    volumes:
+      - localstack_data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./localstack-init:/etc/localstack/init/ready.d
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data:
+  dynamodb_data:
+  localstack_data:
+
+networks:
+  app-network:
+    driver: bridge

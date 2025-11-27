@@ -1,0 +1,50 @@
+version: '3.8'
+
+# Este archivo es para producción sin DynamoDB Local
+# Se conecta a servicios AWS reales
+
+services:
+  # ============================================
+  # Auth Service - Producción
+  # ============================================
+  auth-service:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    container_name: auth-service-prod
+    ports:
+      - "8000:8000"
+    environment:
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    networks:
+      - app-network
+    restart: always
+
+  # ============================================
+  # Users Service - Producción
+  # ============================================
+  users-service:
+    build:
+      context: ./users
+      dockerfile: Dockerfile
+    container_name: users-service-prod
+    ports:
+      - "8001:8001"
+    environment:
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    networks:
+      - app-network
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge

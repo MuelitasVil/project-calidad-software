@@ -10,6 +10,7 @@ def get_dynamo_client():
         "dynamodb",
         #aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
         #aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-        region_name=os.getenv("AWS_REGION")
+        region_name=os.getenv("AWS_REGION"),
+        endpoint_url=os.getenv("DYNAMODB_ENDPOINT_URL")  # Permite usar DynamoDB Local en desarrollo
     )
     return session
