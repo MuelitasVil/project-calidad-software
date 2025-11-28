@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auth"
+version = "0.1.0"
+description = "Authentication service for UNAL project"
+requires-python = ">=3.11"
+
+[tool.setuptools]
+packages = ["controller", "domain", "service", "repository", "configuration", "routes"]
