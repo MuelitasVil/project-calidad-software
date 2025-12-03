@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from domain.dtos.auth.register_input import RegisterInput
 from domain.dtos.auth.login_input import LoginInput
+from domain.dtos.auth.update_user_input import UpdateUserInput
 from service.crud.auth_service import AuthService
 
 
@@ -33,3 +34,39 @@ def login(data: LoginInput):
 @router.get("/validate-token")
 def validatetoken(data:str):
     return AuthService.verify_token(data)
+
+
+@router.patch("/user/{e_mail}")
+def update_user(e_mail: str, data: UpdateUserInput):
+    """Actualiza contraseña y/o tipo de usuario"""
+    result = AuthService.update_user(
+        e_mail=e_mail,
+        password=data.password,
+        type_user=data.type_user
+    )
+    
+    if not result:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if result == "admin_exists":
+        raise HTTPException(
+            status_code=400, 
+            detail="Admin user already exists. Only one admin is allowed."
+        )
+    
+    return {
+        "message": "User updated successfully",
+        "e_mail": result.e_mail,
+        "type_user": result.type_user
+    }
+
+
+@router.get("/user/{e_mail}/type")
+def get_user_type(e_mail: str):
+    """Obtiene el tipo/rol de un usuario"""
+    type_user = AuthService.get_user_type(e_mail)
+    
+    if not type_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {"e_mail": e_mail, "type_user": type_user}

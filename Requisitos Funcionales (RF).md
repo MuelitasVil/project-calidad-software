@@ -6,10 +6,10 @@ RF1. Autenticación de usuarios
 * RF1.4. El administrador debe acceder con una única cuenta especial de administración.-->OK
 
 RF2. Gestión de usuarios
-* RF2.1. El sistema debe permitir registrar usuarios nuevos de manera individual.
+* RF2.1. El sistema debe permitir registrar usuarios nuevos de manera individual.-->OK
 * RF2.2. El sistema debe permitir almacenar para cada usuario: Nombre completo, Uno o dos correos electrónicos (institucional y personal), Número de teléfono, Placa de vehículo y Rol del usuario (estudiante, profesor, invitado)
 * RF2.3. El usuario debe poder editar sus propios datos: Correo electrónico, Número de teléfono, Placa del vehículo
-* RF2.4. El administrador debe poder: Crear usuarios, Editar la información de cualquier usuario, Actualizar correo y contraseña, Clasificar usuarios según rol
+* RF2.4. El administrador debe poder: Crear usuarios, Editar la información de cualquier usuario, Actualizar correo y contraseña, Clasificar usuarios según rol-->OK
 
 RF3. Consulta y búsqueda de usuarios
 * RF3.1. El administrador debe poder buscar usuarios por: Correo electrónico, Cedula, Nombre

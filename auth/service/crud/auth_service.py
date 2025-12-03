@@ -98,3 +98,47 @@ class AuthService:
         except jwt.InvalidTokenError:
             print("❌ Token inválido")
             return False
+
+    @staticmethod
+    def update_user(e_mail: str, password: str = None, type_user: str = None):
+        """Actualiza contraseña y/o tipo de usuario"""
+        repo = AuthRepository(get_dynamo_client())
+        
+        # Verificar que el usuario existe
+        user = repo.get_user_by_email(e_mail)
+        if not user:
+            return None
+
+        # Obtener el tipo actual del usuario
+        current_type = user.type_user
+
+        # Validar restricción de admin único si se está cambiando a admin
+        if type_user and type_user.lower() == "admin" and current_type.lower() != "admin":
+            if repo.check_admin_exists():
+                return "admin_exists"
+
+        # Actualizar contraseña si se proporciona
+        if password:
+            hashed = pwd_context.hash(password)
+            if not repo.update_user_password(e_mail, hashed):
+                return None
+
+        # Actualizar tipo de usuario si se proporciona
+        if type_user and type_user != current_type:
+            # Actualizar en tabla usuario
+            if not repo.update_user_type(e_mail, type_user, current_type):
+                return None
+            
+            # Actualizar en tabla type_user (remover del tipo anterior y agregar al nuevo)
+            repo.remove_email_from_type_user(current_type, e_mail)
+            repo.add_email_to_type_user(type_user, e_mail)
+
+        # Obtener usuario actualizado
+        return repo.get_user_by_email(e_mail)
+
+    @staticmethod
+    def get_user_type(e_mail: str) -> str | None:
+        """Obtiene el tipo de usuario por su email"""
+        repo = AuthRepository(get_dynamo_client())
+        return repo.get_user_type_by_email(e_mail)
+

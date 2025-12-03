@@ -23,6 +23,32 @@ class AuthRepository:
         item = response.get("Item")
         return SystemUser(**item) if item else None
 
+    def update_user_password(self, e_mail: str, hashed_password: str) -> bool:
+        """Actualiza la contraseña de un usuario"""
+        try:
+            self.user_table.update_item(
+                Key={"e_mail": e_mail},
+                UpdateExpression="SET hashed_password = :pwd",
+                ExpressionAttributeValues={":pwd": hashed_password}
+            )
+            return True
+        except Exception as e:
+            print(f"Error updating password: {e}")
+            return False
+
+    def update_user_type(self, e_mail: str, new_type: str, old_type: str = None) -> bool:
+        """Actualiza el tipo de usuario en la tabla usuario"""
+        try:
+            self.user_table.update_item(
+                Key={"e_mail": e_mail},
+                UpdateExpression="SET type_user = :type",
+                ExpressionAttributeValues={":type": new_type}
+            )
+            return True
+        except Exception as e:
+            print(f"Error updating user type: {e}")
+            return False
+
     # ---------------- TOKENS ----------------
     def create_token(self, token: Token) -> Token:
         """Guarda un token JWT"""
@@ -72,6 +98,27 @@ class AuthRepository:
                 ExpressionAttributeValues={":emails": emails}
             )
         return {"type_user": type_user, "emails": emails}
+
+    def remove_email_from_type_user(self, type_user: str, e_mail: str):
+        """Elimina un correo del tipo de usuario"""
+        existing = self.get_type_user(type_user)
+        if not existing:
+            return None
+
+        emails = existing.get("emails", [])
+        if e_mail in emails:
+            emails.remove(e_mail)
+            self.type_user_table.update_item(
+                Key={"type_user": type_user},
+                UpdateExpression="SET emails = :emails",
+                ExpressionAttributeValues={":emails": emails}
+            )
+        return {"type_user": type_user, "emails": emails}
+
+    def get_user_type_by_email(self, e_mail: str) -> str | None:
+        """Obtiene el tipo de usuario por su email"""
+        user = self.get_user_by_email(e_mail)
+        return user.type_user if user else None
 
     def check_admin_exists(self) -> bool:
         """Verifica si ya existe un usuario con type_user='admin'"""

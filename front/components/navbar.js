@@ -36,7 +36,7 @@ class Navbar {
    * Renderiza el navbar en el contenedor especificado
    * @param {string} containerId - ID del contenedor donde se insertará el navbar
    * @param {Object} options - Opciones de configuración
-   * @param {string} options.currentPage - Página actual ('dashboard' | 'compose-email')
+   * @param {string} options.currentPage - Página actual ('dashboard' | 'compose-email' | 'profile')
    */
   render(containerId = 'navbar-container', options = {}) {
     const container = document.getElementById(containerId);
@@ -46,6 +46,7 @@ class Navbar {
     }
 
     const currentPage = options.currentPage || 'dashboard';
+    const isAdmin = this.user.type_user && this.user.type_user.toLowerCase() === 'admin';
     
     container.innerHTML = `
       <nav class="bg-white shadow-sm">
@@ -75,8 +76,19 @@ class Navbar {
                 ` : ''}
               </div>
 
-              <!-- Navegación entre páginas -->
-              ${this.renderNavigationButton(currentPage)}
+              <!-- Menú Hamburguesa -->
+              <div class="relative">
+                <button id="hamburgerBtn" class="text-gray-500 hover:text-gray-700 p-2 rounded-md hover:bg-gray-100 transition-colors">
+                  <i data-feather="menu" class="h-6 w-6"></i>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg border border-gray-200 z-50">
+                  <div class="py-1">
+                    ${this.renderMenuItems(isAdmin, currentPage)}
+                  </div>
+                </div>
+              </div>
 
               <!-- Botón de logout -->
               <button id="logoutBtn" class="text-gray-500 hover:text-gray-700 flex items-center gap-1 transition-colors">
@@ -99,7 +111,66 @@ class Navbar {
   }
 
   /**
+   * Renderiza los items del menú según el rol del usuario
+   * @param {boolean} isAdmin - Si el usuario es administrador
+   * @param {string} currentPage - Página actual
+   */
+  renderMenuItems(isAdmin, currentPage) {
+    const menuItems = [];
+    
+    if (isAdmin) {
+      // Admin ve: Correo, Usuarios, Períodos, Perfil
+      menuItems.push({
+        id: 'menu-compose-email',
+        icon: 'mail',
+        label: 'Correo',
+        href: 'compose-email.html',
+        active: currentPage === 'compose-email'
+      });
+      
+      menuItems.push({
+        id: 'menu-users',
+        icon: 'users',
+        label: 'Usuarios',
+        href: 'users.html',
+        active: currentPage === 'users'
+      });
+      
+      menuItems.push({
+        id: 'menu-periods',
+        icon: 'calendar',
+        label: 'Períodos',
+        href: 'dashboard.html',
+        active: currentPage === 'dashboard'
+      });
+    }
+    
+    // Todos los roles ven: Perfil
+    menuItems.push({
+      id: 'menu-profile',
+      icon: 'user',
+      label: 'Perfil',
+      href: 'profile.html',
+      active: currentPage === 'profile'
+    });
+
+    return menuItems.map(item => `
+      <a href="${item.href}" 
+         id="${item.id}"
+         class="flex items-center gap-3 px-4 py-2 text-sm ${
+           item.active 
+             ? 'bg-blue-50 text-blue-600 font-medium' 
+             : 'text-gray-700 hover:bg-gray-50'
+         } transition-colors">
+        <i data-feather="${item.icon}" class="h-4 w-4"></i>
+        <span>${item.label}</span>
+      </a>
+    `).join('');
+  }
+
+  /**
    * Renderiza el botón de navegación según la página actual
+   * @deprecated - Reemplazado por menú hamburguesa
    */
   renderNavigationButton(currentPage) {
     if (currentPage === 'dashboard') {
@@ -124,15 +195,29 @@ class Navbar {
    * Configura los event listeners del navbar
    */
   setupEventListeners(currentPage) {
-    // Botón de navegación
-    const navActionBtn = document.getElementById('navActionBtn');
-    if (navActionBtn) {
-      navActionBtn.addEventListener('click', () => {
-        if (currentPage === 'dashboard') {
-          window.location.href = 'compose-email.html';
-        } else if (currentPage === 'compose-email') {
-          window.location.href = 'dashboard.html';
+    // Toggle del menú hamburguesa
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    
+    if (hamburgerBtn && dropdownMenu) {
+      hamburgerBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('hidden');
+      });
+
+      // Cerrar menú al hacer click fuera
+      document.addEventListener('click', (e) => {
+        if (!hamburgerBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+          dropdownMenu.classList.add('hidden');
         }
+      });
+
+      // Cerrar menú al hacer click en un item
+      const menuItems = dropdownMenu.querySelectorAll('a');
+      menuItems.forEach(item => {
+        item.addEventListener('click', () => {
+          dropdownMenu.classList.add('hidden');
+        });
       });
     }
 

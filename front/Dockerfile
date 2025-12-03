@@ -9,6 +9,9 @@ COPY *.jpg /usr/share/nginx/html/
 # Copiar componentes JavaScript reutilizables
 COPY components/ /usr/share/nginx/html/components/
 
+# Copiar scripts JavaScript
+COPY js/ /usr/share/nginx/html/js/
+
 # Copiar documentación
 COPY *.md /usr/share/nginx/html/docs/
 
