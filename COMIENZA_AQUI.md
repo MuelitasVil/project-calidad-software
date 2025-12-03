@@ -35,6 +35,7 @@ make logs   # Ver logs en tiempo real
 
 Abre tu navegador:
 
+- 🌐 **Frontend**: http://localhost:3000 ⭐ **NUEVO**
 - 🔐 **Auth Service**: http://localhost:8000/docs
 - 👥 **Users Service**: http://localhost:8001/docs
 
@@ -49,6 +50,14 @@ Click en "Try it out" en cualquier endpoint en Swagger
 ```
 proyecto-calidad-software/
 │
+├── 🆕 front/                          ← Frontend web (Nginx) ⭐ NUEVO
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   ├── components/
+│   │   ├── navbar.js
+│   │   └── footer.js
+│   ├── COMPONENTS_GUIDE.md
+│   └── *.html
 ├── 🆕 docker-compose.yml              ← Configuración local (PRINCIPAL)
 ├── 🆕 docker-compose-prod.yml         ← Configuración producción
 ├── 🆕 .env.local                      ← Variables de entorno
@@ -82,17 +91,29 @@ proyecto-calidad-software/
 │                   Docker Network: app-network              │
 │                                                             │
 │  ┌──────────────────┐          ┌──────────────────┐       │
-│  │  Auth Service    │          │  Users Service   │       │
-│  │  (8000)          │          │  (8001)          │       │
-│  │  FastAPI         │          │  FastAPI         │       │
-│  └────────┬─────────┘          └────────┬─────────┘       │
+│  │  Frontend        │          │  Auth Service    │       │
+│  │  (3000) Nginx    │─────────▶│  (8000)          │       │
+│  │                  │          │  FastAPI         │       │
+│  └──────────────────┘          └────────┬─────────┘       │
 │           │                             │                 │
-│           ▼                             ▼                 │
-│  ┌──────────────────────┐    ┌──────────────────────┐    │
-│  │ DynamoDB Local       │    │ MySQL 8.0            │    │
-│  │ (Desarrollo)         │    │ dned database        │    │
-│  │                      │    │ admin:teamb321**     │    │
-│  └──────────────────────┘    └──────────────────────┘    │
+│           │                             ▼                 │
+│           │                    ┌──────────────────────┐   │
+│           │                    │ DynamoDB Local       │   │
+│           │                    │ (Desarrollo)         │   │
+│           │                    └──────────────────────┘   │
+│           │                                               │
+│           │              ┌──────────────────┐             │
+│           └─────────────▶│  Users Service   │             │
+│                          │  (8001)          │             │
+│                          │  FastAPI         │             │
+│                          └────────┬─────────┘             │
+│                                   │                       │
+│                                   ▼                       │
+│                          ┌──────────────────────┐         │
+│                          │ MySQL 8.0            │         │
+│                          │ dned database        │         │
+│                          │ admin:teamb321**     │         │
+│                          └──────────────────────┘         │
 │                                                             │
 └────────────────────────────────────────────────────────────┘
 ```
@@ -143,12 +164,14 @@ make rebuild
 make ps
 
 # Deberías ver:
+# frontend-service  ... Up
 # mysql-local       ... Up (healthy)
 # dynamodb-local    ... Up (healthy)
 # auth-service      ... Up
 # users-service     ... Up
 
 # 2. Probar servicios
+curl http://localhost:3000
 curl http://localhost:8000/docs
 curl http://localhost:8001/docs
 
@@ -224,12 +247,13 @@ Lee en este orden:
 
 ---
 
-# ✅ CHECKLIST FINAL
+## ✅ CHECKLIST FINAL
 
 - [ ] Estás en: `/home/totallyti/Documents/academy/UNAL/Calidad_de_Software/project-calidad-software`
 - [ ] Docker está instalado: `docker --version`
 - [ ] Docker Compose disponible: `docker compose version`
 - [ ] Ejecutaste: `./setup-local.sh` o `make up`
+- [ ] Puedes acceder: http://localhost:3000 ⭐ **NUEVO**
 - [ ] Puedes acceder: http://localhost:8000/docs
 - [ ] Puedes acceder: http://localhost:8001/docs
 - [ ] `make ps` muestra todos los servicios "Up"
@@ -250,7 +274,8 @@ cd /home/totallyti/Documents/academy/UNAL/Calidad_de_Software/project-calidad-so
 # 2. Inicia todo
 ./setup-local.sh
 
-# 3. Accede a Swagger
+# 3. Accede a la aplicación
+# Frontend: http://localhost:3000
 # Auth: http://localhost:8000/docs
 # Users: http://localhost:8001/docs
 

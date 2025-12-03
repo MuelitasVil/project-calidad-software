@@ -93,6 +93,20 @@ services:
     restart: unless-stopped
 
   # ============================================
+  # Frontend Service (Nginx)
+  # ============================================
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    container_name: frontend-service
+    ports:
+      - "3000:80"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # ============================================
   # LocalStack (AWS services emulator with DynamoDB UI)
   # ============================================
   localstack:
