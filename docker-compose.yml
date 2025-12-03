@@ -120,6 +120,9 @@ services:
       - DEBUG=1
       - DATA_DIR=/var/lib/localstack/data
       - DYNAMODB_SHARE_DB=1
+      - PERSISTENCE=1          # Habilitar persistencia de datos
+      - SNAPSHOT_SAVE_STRATEGY=ON_SHUTDOWN  # Guardar al apagar
+      - SNAPSHOT_LOAD_STRATEGY=ON_STARTUP   # Cargar al iniciar
     volumes:
       - localstack_data:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock

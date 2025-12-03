@@ -28,6 +28,12 @@ class AuthService:
             print("⚠️ El usuario ya existe")
             return None
 
+        # Verificar si se intenta crear un admin cuando ya existe uno
+        if type_user.lower() == "admin":
+            if repo.check_admin_exists():
+                print("⚠️ Ya existe un usuario administrador registrado")
+                return "admin_exists"
+
         # Crear el usuario en auth_ms_usuario
         hashed = pwd_context.hash(password)
         user = SystemUser(
@@ -45,7 +51,7 @@ class AuthService:
         return user
 
     @staticmethod
-    def login(e_mail: str, password: str) -> str | None:
+    def login(e_mail: str, password: str) -> dict | None:
         """Verifica credenciales y genera un token JWT"""
         repo = AuthRepository(get_dynamo_client())
         user = repo.get_user_by_email(e_mail)
@@ -70,7 +76,15 @@ class AuthService:
                 created_at=datetime.utcnow()
             )
         )
-        return jwt_token
+        
+        # Retornar token y datos del usuario
+        return {
+            "token": jwt_token,
+            "user": {
+                "email": user.e_mail,
+                "type_user": user.type_user
+            }
+        }
 
     @staticmethod
     def verify_token(token: str) -> bool | None:

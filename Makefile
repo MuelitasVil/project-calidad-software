@@ -5,7 +5,7 @@
 .PHONY: up down build restart logs clean help
 .PHONY: recreate recreate-auth
 .PHONY: mysql-native-auth
-.PHONY: verify-dynamodb
+.PHONY: verify-dynamodb backup-db restore-db seed-admin
 
 # Detectar qué comando de docker compose está disponible:
 # - `docker-compose` (legacy)
@@ -34,7 +34,11 @@ help:
 	@echo "  make clean           - Limpiar contenedores y volúmenes"
 	@echo "  make ps              - Ver estado de los contenedores"
 	@echo ""
-
+	@echo "  🗄️  DynamoDB Data Management:"
+	@echo "  make backup-db       - Hacer backup de las tablas DynamoDB"
+	@echo "  make restore-db      - Restaurar tablas DynamoDB desde backup"
+	@echo "  make seed-admin      - Crear usuario admin (mhoyos@example.com)"
+	@echo ""
 		@echo "  make recreate        - Reconstruir y forzar recrear todos los servicios"
 		@echo "  make recreate-auth   - Forzar reconstrucción del servicio auth"
 build:
@@ -92,6 +96,18 @@ mysql-native-auth:
 verify-dynamodb:
 	@echo "🔍 Verificando tablas DynamoDB en LocalStack..."
 	@./verify-dynamodb-tables.sh
+
+backup-db:
+	@echo "💾 Haciendo backup de DynamoDB..."
+	@./localstack-init/backup-dynamodb.sh
+
+restore-db:
+	@echo "♻️  Restaurando DynamoDB desde backup..."
+	@./localstack-init/restore-dynamodb.sh
+
+seed-admin:
+	@echo "🌱 Creando usuario admin..."
+	@./localstack-init/seed-admin.sh
 
 .PHONY: dynamodb-ui-host
 dynamodb-ui-host:

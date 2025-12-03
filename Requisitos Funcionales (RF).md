@@ -1,9 +1,9 @@
 Requisitos Funcionales (RF)
 RF1. Autenticación de usuarios
-* RF1.1. El sistema debe permitir el inicio de sesión mediante una página de login.
-* RF1.2. El login debe permitir el acceso tanto a usuarios normales como al usuario administrador.
+* RF1.1. El sistema debe permitir el inicio de sesión mediante una página de login. -->OK
+* RF1.2. El login debe permitir el acceso tanto a usuarios normales como al usuario administrador.-->OK
 * RF1.3. El sistema debe permitir contraseñas simples (a solicitud del cliente), sin requerir reglas estrictas de seguridad.
-* RF1.4. El administrador debe acceder con una única cuenta especial de administración.
+* RF1.4. El administrador debe acceder con una única cuenta especial de administración.-->OK
 
 RF2. Gestión de usuarios
 * RF2.1. El sistema debe permitir registrar usuarios nuevos de manera individual.

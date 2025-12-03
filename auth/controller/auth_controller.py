@@ -12,15 +12,22 @@ def register(data: RegisterInput):
     user = AuthService.register(data.e_mail, data.password, data.type_user)
     if not user:
         raise HTTPException(status_code=400, detail="User already exists")
+    if user == "admin_exists":
+        raise HTTPException(status_code=400, detail="Admin user already exists. Only one admin is allowed.")
     return {"message": "User registered", "e_mail": user.e_mail}
 
 
 @router.post("/login")
 def login(data: LoginInput):
-    token = AuthService.login(data.e_mail, data.password)
-    if not token:
+    result = AuthService.login(data.e_mail, data.password)
+    if not result:
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    return {"Access Granted":data.e_mail, "Access_token": token, "token_type": "bearer"}
+    return {
+        "Access Granted": result["user"]["email"],
+        "Access_token": result["token"],
+        "token_type": "bearer",
+        "type_user": result["user"]["type_user"]
+    }
     
 
 @router.get("/validate-token")

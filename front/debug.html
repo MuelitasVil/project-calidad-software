@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug - ORGSECURE</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">🔍 Debug localStorage</h1>
+    
+    <div class="bg-white rounded-lg shadow-md p-6 mb-4">
+      <h2 class="text-xl font-semibold mb-4">Contenido actual de localStorage:</h2>
+      <div id="storage-content" class="bg-gray-50 p-4 rounded font-mono text-sm"></div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-4">
+      <h2 class="text-xl font-semibold mb-4">Usuario parseado:</h2>
+      <div id="user-parsed" class="bg-gray-50 p-4 rounded font-mono text-sm"></div>
+    </div>
+
+    <div class="flex gap-4">
+      <button onclick="clearStorage()" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+        Limpiar localStorage
+      </button>
+      <button onclick="location.reload()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        Recargar
+      </button>
+      <a href="login.html" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+        Ir a Login
+      </a>
+    </div>
+  </div>
+
+  <script>
+    function displayStorage() {
+      const token = localStorage.getItem('authToken');
+      const user = localStorage.getItem('user');
+      
+      const content = document.getElementById('storage-content');
+      content.innerHTML = `
+        <div class="mb-4">
+          <strong>authToken:</strong><br>
+          <span class="text-xs break-all">${token || '<span class="text-red-500">NO EXISTE</span>'}</span>
+        </div>
+        <div>
+          <strong>user (raw):</strong><br>
+          <span class="break-all">${user || '<span class="text-red-500">NO EXISTE</span>'}</span>
+        </div>
+      `;
+
+      // Parsear usuario
+      try {
+        const userParsed = JSON.parse(user || '{}');
+        const parsed = document.getElementById('user-parsed');
+        parsed.innerHTML = `
+          <pre>${JSON.stringify(userParsed, null, 2)}</pre>
+          <div class="mt-4 p-3 ${userParsed.type_user ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} rounded">
+            ${userParsed.type_user 
+              ? '✅ type_user existe: <strong>' + userParsed.type_user + '</strong>' 
+              : '⚠️ type_user NO existe en el objeto'}
+          </div>
+        `;
+      } catch (e) {
+        const parsed = document.getElementById('user-parsed');
+        parsed.innerHTML = `<span class="text-red-500">Error al parsear: ${e.message}</span>`;
+      }
+    }
+
+    function clearStorage() {
+      if (confirm('¿Seguro que quieres limpiar el localStorage?')) {
+        localStorage.clear();
+        location.reload();
+      }
+    }
+
+    displayStorage();
+  </script>
+</body>
+</html>

@@ -95,6 +95,7 @@
 
         const user = data["Access Granted"];
         const token = data.Access_token;
+        const typeUser = data.type_user || "user";
 
         if (!token || !user) {
           throw new Error('Invalid response: missing token or user.');
@@ -102,8 +103,12 @@
 
         // Guardar datos
         localStorage.setItem('authToken', token);
-        // Guardar usuario como JSON para que navbar pueda parsearlo
-        localStorage.setItem('user', JSON.stringify({ email: user, username: user }));
+        // Guardar usuario como JSON con rol incluido
+        localStorage.setItem('user', JSON.stringify({ 
+          email: user, 
+          username: user,
+          type_user: typeUser
+        }));
 
         // Mensaje visual antes de redirigir
         errorDiv.classList.remove('text-red-500');

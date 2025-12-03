@@ -60,10 +60,19 @@ class Navbar {
             <!-- Usuario y acciones -->
             <div class="flex items-center gap-4">
               <!-- Display de usuario -->
-              <div id="userDisplay"
-                class="flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                <i data-feather="user" class="h-4 w-4"></i>
-                <span>${this.user.username || this.user.email || 'Usuario'}</span>
+              <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                  <i data-feather="user" class="h-4 w-4"></i>
+                  <span>${this.user.username || this.user.email || 'Usuario'}</span>
+                </div>
+                
+                <!-- Rol del usuario -->
+                ${this.user.type_user ? `
+                  <div class="flex items-center gap-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                    <i data-feather="shield" class="h-4 w-4"></i>
+                    <span>${this.user.type_user}</span>
+                  </div>
+                ` : ''}
               </div>
 
               <!-- Navegación entre páginas -->

@@ -72,3 +72,18 @@ class AuthRepository:
                 ExpressionAttributeValues={":emails": emails}
             )
         return {"type_user": type_user, "emails": emails}
+
+    def check_admin_exists(self) -> bool:
+        """Verifica si ya existe un usuario con type_user='admin'"""
+        try:
+            # Buscar en la tabla auth_ms_type_user si existe el tipo 'admin'
+            response = self.type_user_table.get_item(Key={"type_user": "admin"})
+            admin_type = response.get("Item")
+            
+            # Si existe y tiene al menos un email, significa que hay un admin registrado
+            if admin_type and admin_type.get("emails") and len(admin_type.get("emails", [])) > 0:
+                return True
+            return False
+        except Exception as e:
+            print(f"Error checking admin existence: {e}")
+            return False
