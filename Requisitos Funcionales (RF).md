@@ -7,18 +7,18 @@ RF1. Autenticación de usuarios
 
 RF2. Gestión de usuarios
 * RF2.1. El sistema debe permitir registrar usuarios nuevos de manera individual.-->OK
-* RF2.2. El sistema debe permitir almacenar para cada usuario: Nombre completo, Uno o dos correos electrónicos (institucional y personal), Número de teléfono, Placa de vehículo y Rol del usuario (estudiante, profesor, invitado)
-* RF2.3. El usuario debe poder editar sus propios datos: Correo electrónico, Número de teléfono, Placa del vehículo
+* RF2.2. El sistema debe permitir almacenar para cada usuario: Nombre completo, Uno o dos correos electrónicos (institucional y personal), Número de teléfono, Placa de vehículo y Rol del usuario (estudiante, profesor, invitado) -->OK
+* RF2.3. El usuario debe poder editar sus propios datos: Correo electrónico, Número de teléfono, Placa del vehículo-->OK
 * RF2.4. El administrador debe poder: Crear usuarios, Editar la información de cualquier usuario, Actualizar correo y contraseña, Clasificar usuarios según rol-->OK
 
 RF3. Consulta y búsqueda de usuarios
-* RF3.1. El administrador debe poder buscar usuarios por: Correo electrónico, Cedula, Nombre
-* RF3.2. El administrador debe poder visualizar el número total de usuarios registrados mediante un indicador grande y visible.
+* RF3.1. El administrador debe poder buscar usuarios por: Correo electrónico, Cedula, Nombre -->OK
+* RF3.2. El administrador debe poder visualizar el número total de usuarios registrados mediante un indicador grande y visible.-->OK
 
 RF4. Interfaz del sistema (Front-end)
-RF4.1. El sistema debe contar con un front-end funcional.
-RF4.2. La interfaz debe utilizar un color púrpura claro, acorde al nuevo estilo visual solicitado por la Universidad.
-RF4.3. La interfaz debe permitir navegar entre: Login, Gestión de usuarios, Envío de notificaciones, Estadísticas (número de usuarios)
+RF4.1. El sistema debe contar con un front-end funcional.-->OK
+RF4.2. La interfaz debe utilizar un color púrpura claro, acorde al nuevo estilo visual solicitado por la Universidad.-->OK
+RF4.3. La interfaz debe permitir navegar entre: Login, Gestión de usuarios, Envío de notificaciones, Estadísticas (número de usuarios)-->OK
 
 Requisitos No Funcionales (RNF)
 RNF1. Rendimiento
@@ -26,13 +26,13 @@ RNF1. Rendimiento
 * RNF1.2. La carga de usuarios debe completarse sin fallos y en un tiempo razonable.
 
 RNF2. Usabilidad
-* RNF2.1. La interfaz debe ser simple, clara y entendible para usuarios sin conocimientos técnicos.
-* RNF2.2. La edición de datos debe ser intuitiva para evitar complicaciones.
-* RNF2.3. El login debe ser fácil de usar, especialmente pensado para personal administrativo que no maneja contraseñas complejas.
+* RNF2.1. La interfaz debe ser simple, clara y entendible para usuarios sin conocimientos técnicos.-->OK
+* RNF2.2. La edición de datos debe ser intuitiva para evitar complicaciones.-->OK
+* RNF2.3. El login debe ser fácil de usar, especialmente pensado para personal administrativo que no maneja contraseñas complejas.-->OK
 
 RNF3. Seguridad
 * RNF3.1. Aunque el cliente solicita contraseñas simples, el sistema debe implementar medidas mínimas de seguridad, se sugiere la implementación de un OTP.
-* RNF3.2. Acceso único al rol administrador.
+* RNF3.2. Acceso único al rol administrador.-->OK
 
 
 

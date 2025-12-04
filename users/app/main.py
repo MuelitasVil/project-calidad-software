@@ -19,6 +19,7 @@ from .controllers import (
     email_sender_school_controller,
     email_sender_headquarters_controller,
     upload_controller,
+    user_contact_data_controller,
 )
 
 # Crear instancia de FastAPI
@@ -49,6 +50,7 @@ app.include_router(period_controller.router)
 app.include_router(user_workspace_controller.router)
 app.include_router(user_workspace_associate_controller.router)
 app.include_router(user_unal_controller.router)
+app.include_router(user_contact_data_controller.router)
 app.include_router(unit_unal_controller.router)
 app.include_router(user_unit_associate_controller.router)
 app.include_router(school_controller.router)

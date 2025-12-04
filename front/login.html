@@ -183,6 +183,11 @@
             </div>
           </div>
 
+          <!-- Contact Information Section -->
+          <div class="mt-6 pt-6 border-t border-gray-200">
+            <div id="registerContactsContainer"></div>
+          </div>
+
           <!-- Submit Button -->
           <div class="flex gap-3 pt-4">
             <button type="submit" 
@@ -214,9 +219,28 @@
   <!-- Footer Container -->
   <div id="footer-container"></div>
 
+  <!-- Contact Manager Component -->
+  <script src="js/contact-manager.js"></script>
+
   <script>
     const AUTH_API = 'http://localhost:8000';
     const USERS_API = 'http://localhost:8001';
+    const CONTACTS_API = 'http://localhost:8001/contact_data';
+    
+    // Inicializar ContactManager para registro
+    let registerContactManager;
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      registerContactManager = new ContactManager('registerContactsContainer', {
+        showLabels: true,
+        allowEmpty: true,
+        minContacts: 0,
+        maxContacts: 10
+      });
+      
+      // Agregar un contacto vacío inicial
+      registerContactManager.addContact();
+    });
 
     // Tab switching
     const tabLogin = document.getElementById('tabLogin');
@@ -303,7 +327,7 @@
         errorDiv.textContent = '✅ Login successful! Redirecting...';
 
         setTimeout(() => {
-          window.location.href = 'dashboard.html';
+          window.location.href = 'home.html';
         }, 1000);
 
       } catch (error) {
@@ -346,6 +370,9 @@
         gender: document.getElementById('reg_gender').value || null,
         birth_date: document.getElementById('reg_birth_date').value || null
       };
+      
+      // Obtener contactos del manager
+      const contacts = registerContactManager.getContacts();
 
       try {
         const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -390,11 +417,31 @@
           throw new Error(error.detail || 'Error en registro de usuario');
         }
 
+        // 3. Create contact data if provided (array of contacts)
+        if (contacts.length > 0) {
+          const contactsWithEmail = contacts.map(c => ({
+            ...c,
+            email_unal: formData.email_unal
+          }));
+          
+          const contactResponse = await fetch(`${CONTACTS_API}/bulk`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(contactsWithEmail)
+          });
+
+          if (!contactResponse.ok) {
+            console.warn('Warning: Contact data not saved, but user was created');
+          }
+        }
+
         // Success
         messageDiv.className = 'text-green-600 text-sm mt-2 text-center';
         messageDiv.textContent = '✅ Usuario registrado exitosamente. Puedes iniciar sesión ahora.';
         
         document.getElementById('registerForm').reset();
+        registerContactManager.clear();
+        registerContactManager.addContact(); // Agregar uno vacío de nuevo
         
         // Switch to login tab after 2 seconds
         setTimeout(() => {

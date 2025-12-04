@@ -53,10 +53,10 @@ class Navbar {
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex justify-between h-16">
             <!-- Logo y título -->
-            <div class="flex items-center gap-2">
+            <a href="home.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img src="logo-p.png" alt="Logo" class="h-8 w-auto">
               <span class="text-xl font-semibold text-gray-800">ORGSECURE</span>
-            </div>
+            </a>
 
             <!-- Usuario y acciones -->
             <div class="flex items-center gap-4">
@@ -117,6 +117,15 @@ class Navbar {
    */
   renderMenuItems(isAdmin, currentPage) {
     const menuItems = [];
+    
+    // Todos los roles ven: Inicio
+    menuItems.push({
+      id: 'menu-home',
+      icon: 'home',
+      label: 'Inicio',
+      href: 'home.html',
+      active: currentPage === 'home'
+    });
     
     if (isAdmin) {
       // Admin ve: Correo, Usuarios, Períodos, Perfil

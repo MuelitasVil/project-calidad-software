@@ -5,11 +5,15 @@
 
 const AUTH_API = 'http://localhost:8000';
 const USERS_API = 'http://localhost:8001';
+const CONTACTS_API = `${USERS_API}/contact_data`;
 
 class UsersManager {
     constructor() {
         this.users = [];
         this.filteredUsers = [];
+        this.adminContactManager = null;
+        this.editContactManager = null;
+        this.currentEditEmail = null;
         this.init();
     }
 
@@ -17,7 +21,63 @@ class UsersManager {
         this.setupTabs();
         this.setupForms();
         this.setupSearch();
+        this.initContactManager();
         this.loadUsers();
+        this.updateUserCount();
+    }
+    
+    /**
+     * Actualizar contador de usuarios
+     */
+    async updateUserCount() {
+        try {
+            console.log('Fetching user count from:', `${USERS_API}/users_unal`);
+            const response = await fetch(`${USERS_API}/users_unal`);
+            console.log('Response status:', response.status);
+            
+            if (response.ok) {
+                const users = await response.json();
+                console.log('Total users received:', users.length);
+                console.log('Users data:', users);
+                
+                const countElement = document.getElementById('totalUsersCount');
+                console.log('Count element found:', countElement);
+                
+                if (countElement) {
+                    countElement.textContent = users.length;
+                    console.log('Updated count element to:', users.length);
+                } else {
+                    console.error('Element totalUsersCount not found in DOM');
+                }
+            } else {
+                console.error('Response not ok:', response.status);
+            }
+        } catch (error) {
+            console.error('Error al obtener el conteo de usuarios:', error);
+        }
+    }
+    
+    /**
+     * Inicializar ContactManager
+     */
+    initContactManager() {
+        this.adminContactManager = new ContactManager('adminContactsContainer', {
+            showLabels: true,
+            allowEmpty: true,
+            minContacts: 0,
+            maxContacts: 10
+        });
+        
+        // Agregar un contacto vacío inicial
+        this.adminContactManager.addContact();
+        
+        // Inicializar ContactManager para edición
+        this.editContactManager = new ContactManager('editContactsContainer', {
+            showLabels: true,
+            allowEmpty: true,
+            minContacts: 0,
+            maxContacts: 10
+        });
     }
 
     /**
@@ -29,30 +89,26 @@ class UsersManager {
         const registerTab = document.getElementById('registerTab');
         const listTab = document.getElementById('listTab');
 
-        tabRegister.addEventListener('click', () => {
-            tabRegister.classList.add('active', 'border-blue-600', 'text-blue-600');
-            tabRegister.classList.remove('border-transparent', 'text-gray-500');
-            tabList.classList.remove('active', 'border-blue-600', 'text-blue-600');
-            tabList.classList.add('border-transparent', 'text-gray-500');
-            
-            registerTab.classList.remove('hidden');
-            listTab.classList.add('hidden');
-            
-            feather.replace();
-        });
+        const activateTab = (activeButton, activeContent) => {
+            // Reset all tabs
+            [tabRegister, tabList].forEach(tab => {
+                tab.classList.remove('active', 'border-blue-600', 'text-blue-600');
+                tab.classList.add('border-transparent', 'text-gray-500');
+            });
+            [registerTab, listTab].forEach(content => {
+                content.classList.add('hidden');
+            });
 
-        tabList.addEventListener('click', () => {
-            tabList.classList.add('active', 'border-blue-600', 'text-blue-600');
-            tabList.classList.remove('border-transparent', 'text-gray-500');
-            tabRegister.classList.remove('active', 'border-blue-600', 'text-blue-600');
-            tabRegister.classList.add('border-transparent', 'text-gray-500');
+            // Activate selected tab
+            activeButton.classList.add('active', 'border-blue-600', 'text-blue-600');
+            activeButton.classList.remove('border-transparent', 'text-gray-500');
+            activeContent.classList.remove('hidden');
             
-            listTab.classList.remove('hidden');
-            registerTab.classList.add('hidden');
-            
-            this.loadUsers();
             feather.replace();
-        });
+        };
+
+        tabRegister.addEventListener('click', () => activateTab(tabRegister, registerTab));
+        tabList.addEventListener('click', () => activateTab(tabList, listTab));
     }
 
     /**
@@ -108,6 +164,9 @@ class UsersManager {
             gender: document.getElementById('gender').value || null,
             birth_date: document.getElementById('birth_date').value || null
         };
+        
+        // Obtener contactos del manager
+        const contacts = this.adminContactManager.getContacts();
 
         try {
             // Show loading
@@ -153,9 +212,32 @@ class UsersManager {
                 throw new Error(error.detail || 'Error en registro de usuario');
             }
 
+            // 3. Create contact data (array of contacts)
+            if (contacts.length > 0) {
+                const contactsWithEmail = contacts.map(c => ({
+                    ...c,
+                    email_unal: formData.email_unal
+                }));
+                
+                const contactResponse = await fetch(`${CONTACTS_API}/bulk`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(contactsWithEmail)
+                });
+
+                if (!contactResponse.ok) {
+                    console.warn('Warning: Contact data not saved, but user was created');
+                }
+            }
+
             // Success
             this.showNotification('Usuario registrado exitosamente', 'success');
             document.getElementById('registerForm').reset();
+            this.adminContactManager.clear();
+            this.adminContactManager.addContact();
+            
+            // Update user count
+            this.updateUserCount();
             
             // Switch to list tab
             document.getElementById('tabList').click();
@@ -323,9 +405,11 @@ class UsersManager {
     /**
      * Abrir modal de edición
      */
-    editUser(email) {
+    async editUser(email) {
         const user = this.users.find(u => u.email_unal === email);
         if (!user) return;
+
+        this.currentEditEmail = email;
 
         document.getElementById('edit_email_unal').value = user.email_unal;
         document.getElementById('edit_email_display').value = user.email_unal;
@@ -338,7 +422,37 @@ class UsersManager {
         document.getElementById('edit_gender').value = user.gender || '';
         document.getElementById('edit_birth_date').value = user.birth_date || '';
 
+        // Cargar contactos del usuario
+        await this.loadUserContacts(email);
+
         document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    /**
+     * Cargar contactos de un usuario
+     */
+    async loadUserContacts(email) {
+        try {
+            const response = await fetch(`${CONTACTS_API}/user/${encodeURIComponent(email)}`);
+            if (response.ok) {
+                const contacts = await response.json();
+                if (contacts.length > 0) {
+                    this.editContactManager.loadContacts(contacts);
+                } else {
+                    // No hay contactos, agregar uno vacío
+                    this.editContactManager.clear();
+                    this.editContactManager.addContact();
+                }
+            } else {
+                // Error al cargar, agregar uno vacío
+                this.editContactManager.clear();
+                this.editContactManager.addContact();
+            }
+        } catch (error) {
+            console.error('Error loading contacts:', error);
+            this.editContactManager.clear();
+            this.editContactManager.addContact();
+        }
     }
 
     /**
@@ -403,9 +517,24 @@ class UsersManager {
                 }
             }
 
+            // 3. Sincronizar contactos
+            const contacts = this.editContactManager.getContacts();
+            if (contacts.length > 0) {
+                const contactResponse = await fetch(`${CONTACTS_API}/user/${encodeURIComponent(email)}/sync`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(contacts)
+                });
+
+                if (!contactResponse.ok) {
+                    console.warn('Warning: Contact data not updated');
+                }
+            }
+
             this.showNotification('Usuario actualizado exitosamente', 'success');
             this.closeEditModal();
             this.loadUsers();
+            this.updateUserCount();
 
         } catch (error) {
             console.error('Error:', error);
@@ -433,6 +562,7 @@ class UsersManager {
 
             this.showNotification('Usuario eliminado exitosamente', 'success');
             this.loadUsers();
+            this.updateUserCount();
 
         } catch (error) {
             console.error('Error:', error);

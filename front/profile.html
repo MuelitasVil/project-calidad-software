@@ -88,6 +88,129 @@
             </form>
         </div>
 
+        <!-- Personal Information Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-semibold text-gray-800">Información Personal</h2>
+                <button id="editPersonalBtn" class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                    <i data-feather="edit-2" class="h-4 w-4"></i>
+                    <span>Editar</span>
+                </button>
+            </div>
+
+            <form id="personalForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Document -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i data-feather="credit-card" class="inline h-4 w-4"></i>
+                            Documento de Identidad
+                        </label>
+                        <input type="text" id="inputDocument" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="1234567890" disabled>
+                    </div>
+
+                    <!-- Gender -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i data-feather="users" class="inline h-4 w-4"></i>
+                            Género
+                        </label>
+                        <select id="inputGender" 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                disabled>
+                            <option value="">Seleccionar</option>
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                            <option value="O">Otro</option>
+                        </select>
+                    </div>
+
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i data-feather="user" class="inline h-4 w-4"></i>
+                            Nombre
+                        </label>
+                        <input type="text" id="inputName" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="Juan" disabled>
+                    </div>
+
+                    <!-- Lastname -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i data-feather="user" class="inline h-4 w-4"></i>
+                            Apellido
+                        </label>
+                        <input type="text" id="inputLastname" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="Pérez" disabled>
+                    </div>
+
+                    <!-- Birth Date -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i data-feather="calendar" class="inline h-4 w-4"></i>
+                            Fecha de Nacimiento
+                        </label>
+                        <input type="date" id="inputBirthDate" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               disabled>
+                    </div>
+
+                    <!-- Full Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i data-feather="user-check" class="inline h-4 w-4"></i>
+                            Nombre Completo
+                        </label>
+                        <input type="text" id="inputFullName" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="Juan Pérez García" disabled>
+                    </div>
+                </div>
+
+                <!-- Action Buttons (hidden by default) -->
+                <div id="personalActionButtons" class="hidden flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+                        <i data-feather="save" class="h-4 w-4"></i>
+                        <span>Guardar Cambios</span>
+                    </button>
+                    <button type="button" id="cancelPersonalBtn" class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition-colors flex items-center justify-center gap-2">
+                        <i data-feather="x" class="h-4 w-4"></i>
+                        <span>Cancelar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Contact Information Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-semibold text-gray-800">Datos de Contacto</h2>
+                <button id="editContactBtn" class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                    <i data-feather="edit-2" class="h-4 w-4"></i>
+                    <span>Editar</span>
+                </button>
+            </div>
+
+            <div id="profileContactsContainer"></div>
+
+            <!-- Action Buttons (hidden by default) -->
+            <div id="contactActionButtons" class="hidden flex gap-3 pt-4 mt-4">
+                <button type="button" id="saveContactBtn" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+                    <i data-feather="save" class="h-4 w-4"></i>
+                    <span>Guardar Contactos</span>
+                </button>
+                <button type="button" id="cancelContactBtn" class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition-colors flex items-center justify-center gap-2">
+                    <i data-feather="x" class="h-4 w-4"></i>
+                    <span>Cancelar</span>
+                </button>
+            </div>
+        </div>
+
         <!-- Change Password Section -->
         <div class="bg-white rounded-lg shadow-md p-6 mt-6">
             <div class="flex items-center justify-between mb-6">
@@ -144,7 +267,7 @@
                 <div>
                     <h3 class="font-medium text-blue-900 mb-1">Información</h3>
                     <p class="text-sm text-blue-800">
-                        Solo puedes editar tu nombre de usuario. Para cambiar tu correo o rol, contacta al administrador.
+                        Puedes editar tu información de perfil, datos personales y contactos. Para cambiar tu rol, contacta al administrador.
                     </p>
                 </div>
             </div>
@@ -157,7 +280,12 @@
     <!-- Scripts -->
     <script src="components/navbar.js"></script>
     <script src="components/footer.js"></script>
+    <script src="js/contact-manager.js"></script>
     <script>
+        // APIs
+        const USERS_API = 'http://localhost:8001';
+        const CONTACTS_API = `${USERS_API}/contact_data`;
+        
         // Check authentication
         if (!Navbar.checkAuth()) {
             window.location.href = 'login.html';
@@ -165,6 +293,8 @@
 
         // Load user data
         let userData = {};
+        let userPersonalData = {};
+        
         try {
             const userStr = localStorage.getItem('user') || '{}';
             userData = JSON.parse(userStr);
@@ -173,7 +303,7 @@
             userData = { email: 'Usuario', username: 'Usuario', type_user: 'user' };
         }
 
-        // Populate profile
+        // Populate profile header
         document.getElementById('profileName').textContent = userData.username || userData.email || 'Usuario';
         document.getElementById('profileEmail').textContent = userData.email || 'email@example.com';
         document.getElementById('profileRole').querySelector('span').textContent = userData.type_user || 'Usuario';
@@ -182,7 +312,30 @@
         document.getElementById('inputUsername').value = userData.username || '';
         document.getElementById('inputRole').value = userData.type_user || 'Usuario';
 
-        // Edit mode
+        // Load user personal data from API
+        async function loadUserPersonalData() {
+            try {
+                const response = await fetch(`${USERS_API}/users_unal/${encodeURIComponent(userData.email)}`);
+                if (response.ok) {
+                    userPersonalData = await response.json();
+                    
+                    // Populate personal info fields
+                    document.getElementById('inputDocument').value = userPersonalData.document || '';
+                    document.getElementById('inputName').value = userPersonalData.name || '';
+                    document.getElementById('inputLastname').value = userPersonalData.lastname || '';
+                    document.getElementById('inputFullName').value = userPersonalData.full_name || '';
+                    document.getElementById('inputGender').value = userPersonalData.gender || '';
+                    document.getElementById('inputBirthDate').value = userPersonalData.birth_date || '';
+                }
+            } catch (error) {
+                console.error('Error loading personal data:', error);
+            }
+        }
+
+        // Load personal data on page load
+        loadUserPersonalData();
+
+        // Edit mode - Profile
         let isEditMode = false;
         const editBtn = document.getElementById('editProfileBtn');
         const actionButtons = document.getElementById('actionButtons');
@@ -229,6 +382,84 @@
             editBtn.classList.remove('hidden');
 
             showSuccessMessage('Perfil actualizado correctamente');
+        });
+
+        // Edit mode - Personal Information
+        let isPersonalEditMode = false;
+        const editPersonalBtn = document.getElementById('editPersonalBtn');
+        const personalActionButtons = document.getElementById('personalActionButtons');
+        const cancelPersonalBtn = document.getElementById('cancelPersonalBtn');
+        
+        const personalFields = {
+            document: document.getElementById('inputDocument'),
+            name: document.getElementById('inputName'),
+            lastname: document.getElementById('inputLastname'),
+            fullName: document.getElementById('inputFullName'),
+            gender: document.getElementById('inputGender'),
+            birthDate: document.getElementById('inputBirthDate')
+        };
+
+        editPersonalBtn.addEventListener('click', () => {
+            isPersonalEditMode = true;
+            Object.values(personalFields).forEach(field => field.disabled = false);
+            personalActionButtons.classList.remove('hidden');
+            editPersonalBtn.classList.add('hidden');
+        });
+
+        cancelPersonalBtn.addEventListener('click', () => {
+            isPersonalEditMode = false;
+            
+            // Restore original values
+            personalFields.document.value = userPersonalData.document || '';
+            personalFields.name.value = userPersonalData.name || '';
+            personalFields.lastname.value = userPersonalData.lastname || '';
+            personalFields.fullName.value = userPersonalData.full_name || '';
+            personalFields.gender.value = userPersonalData.gender || '';
+            personalFields.birthDate.value = userPersonalData.birth_date || '';
+            
+            Object.values(personalFields).forEach(field => field.disabled = true);
+            personalActionButtons.classList.add('hidden');
+            editPersonalBtn.classList.remove('hidden');
+        });
+
+        // Personal form submission
+        document.getElementById('personalForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const personalData = {
+                document: personalFields.document.value || null,
+                name: personalFields.name.value || null,
+                lastname: personalFields.lastname.value || null,
+                full_name: personalFields.fullName.value || null,
+                gender: personalFields.gender.value || null,
+                birth_date: personalFields.birthDate.value || null
+            };
+
+            try {
+                const response = await fetch(`${USERS_API}/users_unal/${encodeURIComponent(userData.email)}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(personalData)
+                });
+
+                if (response.ok) {
+                    userPersonalData = await response.json();
+                    
+                    // Exit edit mode
+                    isPersonalEditMode = false;
+                    Object.values(personalFields).forEach(field => field.disabled = true);
+                    personalActionButtons.classList.add('hidden');
+                    editPersonalBtn.classList.remove('hidden');
+
+                    showSuccessMessage('Información personal actualizada correctamente');
+                } else {
+                    const error = await response.json();
+                    showErrorMessage(error.detail || 'Error al actualizar información personal');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showErrorMessage('Error al actualizar información personal');
+            }
         });
 
         // Password form submission
@@ -318,6 +549,117 @@
                 errorMsg.remove();
             }, 3000);
         }
+
+        // Contact form handling
+        let profileContactManager;
+        let isContactEditMode = false;
+
+        // Initialize ContactManager for profile
+        profileContactManager = new ContactManager('profileContactsContainer', {
+            showLabels: true,
+            allowEmpty: true,
+            minContacts: 0,
+            maxContacts: 10
+        });
+
+        const editContactBtn = document.getElementById('editContactBtn');
+        const contactActionButtons = document.getElementById('contactActionButtons');
+        const cancelContactBtn = document.getElementById('cancelContactBtn');
+        const saveContactBtn = document.getElementById('saveContactBtn');
+
+        // Load contact data
+        async function loadContactData() {
+            try {
+                const response = await fetch(`${CONTACTS_API}/user/${encodeURIComponent(userData.email)}`);
+                if (response.ok) {
+                    const contacts = await response.json();
+                    if (contacts.length > 0) {
+                        profileContactManager.loadContacts(contacts);
+                    } else {
+                        // No contacts, add one empty
+                        profileContactManager.addContact();
+                    }
+                    
+                    // Disable editing initially
+                    disableContactEditing();
+                }
+            } catch (error) {
+                console.error('Error loading contact data:', error);
+            }
+        }
+        
+        function disableContactEditing() {
+            const container = document.getElementById('profileContactsContainer');
+            const inputs = container.querySelectorAll('input');
+            const buttons = container.querySelectorAll('button');
+            
+            inputs.forEach(input => input.disabled = true);
+            buttons.forEach(btn => btn.style.display = 'none');
+        }
+        
+        function enableContactEditing() {
+            const container = document.getElementById('profileContactsContainer');
+            const inputs = container.querySelectorAll('input');
+            const buttons = container.querySelectorAll('button');
+            
+            inputs.forEach(input => input.disabled = false);
+            buttons.forEach(btn => btn.style.display = '');
+        }
+
+        // Edit contact mode
+        editContactBtn.addEventListener('click', () => {
+            isContactEditMode = true;
+            enableContactEditing();
+            contactActionButtons.classList.remove('hidden');
+            editContactBtn.classList.add('hidden');
+        });
+
+        cancelContactBtn.addEventListener('click', async () => {
+            isContactEditMode = false;
+            await loadContactData(); // Reload original data
+            disableContactEditing();
+            contactActionButtons.classList.add('hidden');
+            editContactBtn.classList.remove('hidden');
+        });
+
+        // Save contacts
+        saveContactBtn.addEventListener('click', async () => {
+            const contacts = profileContactManager.getContacts();
+            
+            if (contacts.length === 0) {
+                alert('Debes agregar al menos un dato de contacto');
+                return;
+            }
+
+            try {
+                // Use sync endpoint to replace all contacts
+                const response = await fetch(`${CONTACTS_API}/user/${encodeURIComponent(userData.email)}/sync`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(contacts)
+                });
+
+                if (response.ok) {
+                    showSuccessMessage('Datos de contacto actualizados correctamente');
+                    await loadContactData();
+                    
+                    // Exit edit mode
+                    isContactEditMode = false;
+                    disableContactEditing();
+                    contactActionButtons.classList.add('hidden');
+                    editContactBtn.classList.remove('hidden');
+                } else {
+                    const error = await response.json();
+                    showErrorMessage(error.detail || 'Error al actualizar datos de contacto');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showErrorMessage('Error al actualizar datos de contacto');
+            }
+        });
+
+        // Load contact data on page load
+        loadContactData();
 
         // Initialize components
         const navbar = new Navbar();
