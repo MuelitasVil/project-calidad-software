@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenida - ORGSECURE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-blue-50 min-h-screen">
+    <!-- Navbar Container -->
+    <div id="navbar-container"></div>
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto px-4 py-12">
+        <!-- Welcome Card -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <!-- Header with gradient -->
+            <div class="bg-gradient-to-r from-purple-600 to-purple-800 px-8 py-12 text-white text-center">
+                <div class="mb-6">
+                    <img src="logo-p.png" alt="Universidad Nacional de Colombia" 
+                         class="h-32 w-auto mx-auto mb-4 bg-white rounded-full p-4 shadow-lg">
+                </div>
+                <h1 class="text-4xl font-bold mb-3">¡Bienvenido a ORGSECURE!</h1>
+                <p class="text-xl text-purple-100">Sistema de Gestión Organizacional</p>
+            </div>
+
+            <!-- Content -->
+            <div class="px-8 py-10">
+                <!-- Welcome Message -->
+                <div class="mb-10 text-center max-w-3xl mx-auto">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+                        Universidad Nacional de Colombia
+                    </h2>
+                    <p class="text-gray-600 text-lg leading-relaxed">
+                        Bienvenido al sistema de gestión organizacional de la Universidad Nacional de Colombia. 
+                        Esta plataforma te permite administrar usuarios, gestionar comunicaciones y organizar 
+                        la información de manera eficiente y segura.
+                    </p>
+                </div>
+
+                <!-- Features Grid - Admin -->
+                <div id="adminFeatures" class="grid md:grid-cols-3 gap-6 mb-10 hidden">
+                    <!-- Feature 1 -->
+                    <div class="bg-purple-50 rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+                        <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i data-feather="users" class="h-8 w-8 text-purple-600"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Gestión de Usuarios</h3>
+                        <p class="text-gray-600 text-sm">Administra y organiza la información de todos los usuarios del sistema</p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="bg-blue-50 rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+                        <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i data-feather="mail" class="h-8 w-8 text-blue-600"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Comunicaciones</h3>
+                        <p class="text-gray-600 text-sm">Envía notificaciones y comunicados de manera rápida y efectiva</p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="bg-green-50 rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+                        <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i data-feather="shield" class="h-8 w-8 text-green-600"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Seguridad</h3>
+                        <p class="text-gray-600 text-sm">Sistema seguro con control de acceso y gestión de roles</p>
+                    </div>
+                </div>
+
+                <!-- Features Grid - Regular Users -->
+                <div id="userFeatures" class="grid md:grid-cols-3 gap-6 mb-10 hidden">
+                    <!-- Feature 1 - Campus -->
+                    <div class="bg-purple-50 rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+                        <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i data-feather="map-pin" class="h-8 w-8 text-purple-600"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Campus y Sedes</h3>
+                        <p class="text-gray-600 text-sm">Presencia en todo el país con 9 sedes y diversas instalaciones académicas</p>
+                    </div>
+
+                    <!-- Feature 2 - Academic Excellence -->
+                    <div class="bg-blue-50 rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+                        <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i data-feather="award" class="h-8 w-8 text-blue-600"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Excelencia Académica</h3>
+                        <p class="text-gray-600 text-sm">Reconocida como la mejor universidad de Colombia y líder en investigación</p>
+                    </div>
+
+                    <!-- Feature 3 - Community -->
+                    <div class="bg-green-50 rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+                        <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i data-feather="heart" class="h-8 w-8 text-green-600"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Comunidad UNAL</h3>
+                        <p class="text-gray-600 text-sm">Más de 50,000 estudiantes y una red global de egresados destacados</p>
+                    </div>
+                </div>
+
+                <!-- Information Cards for Regular Users -->
+                <div id="userInfoCards" class="space-y-6 mb-10 hidden">
+                    <!-- Mission Card -->
+                    <div class="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-6 border-l-4 border-purple-600">
+                        <div class="flex items-start gap-4">
+                            <div class="bg-purple-600 text-white rounded-full p-3 mt-1">
+                                <i data-feather="target" class="h-6 w-6"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Nuestra Misión</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    La Universidad Nacional de Colombia es una institución pública de educación superior que tiene como misión 
+                                    contribuir a la construcción de una sociedad justa, democrática e incluyente, mediante la formación integral 
+                                    de ciudadanos y la generación de conocimiento en diversos campos del saber.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resources Card -->
+                    <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-6 border-l-4 border-blue-600">
+                        <div class="flex items-start gap-4">
+                            <div class="bg-blue-600 text-white rounded-full p-3 mt-1">
+                                <i data-feather="book-open" class="h-6 w-6"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Recursos y Servicios</h3>
+                                <p class="text-gray-700 mb-3 leading-relaxed">
+                                    Como miembro de la comunidad UNAL, tienes acceso a una amplia gama de recursos:
+                                </p>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex items-center gap-2">
+                                        <i data-feather="check-circle" class="h-4 w-4 text-blue-600"></i>
+                                        <span>Bibliotecas especializadas y bases de datos académicas</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <i data-feather="check-circle" class="h-4 w-4 text-blue-600"></i>
+                                        <span>Laboratorios y espacios de investigación de última generación</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <i data-feather="check-circle" class="h-4 w-4 text-blue-600"></i>
+                                        <span>Programas de bienestar estudiantil y apoyo académico</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <i data-feather="check-circle" class="h-4 w-4 text-blue-600"></i>
+                                        <span>Oportunidades de movilidad nacional e internacional</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Values Card -->
+                    <div class="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-6 border-l-4 border-green-600">
+                        <div class="flex items-start gap-4">
+                            <div class="bg-green-600 text-white rounded-full p-3 mt-1">
+                                <i data-feather="star" class="h-6 w-6"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Valores Institucionales</h3>
+                                <div class="grid md:grid-cols-2 gap-3 text-gray-700">
+                                    <div class="flex items-start gap-2">
+                                        <i data-feather="chevron-right" class="h-5 w-5 text-green-600 mt-0.5"></i>
+                                        <div>
+                                            <strong>Excelencia:</strong> Compromiso con la calidad en todos nuestros procesos
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <i data-feather="chevron-right" class="h-5 w-5 text-green-600 mt-0.5"></i>
+                                        <div>
+                                            <strong>Equidad:</strong> Igualdad de oportunidades para toda la comunidad
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <i data-feather="chevron-right" class="h-5 w-5 text-green-600 mt-0.5"></i>
+                                        <div>
+                                            <strong>Autonomía:</strong> Libertad de pensamiento y expresión académica
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <i data-feather="chevron-right" class="h-5 w-5 text-green-600 mt-0.5"></i>
+                                        <div>
+                                            <strong>Pertinencia:</strong> Compromiso con las necesidades del país
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-gray-50 rounded-lg p-6 mb-8">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Accesos Rápidos</h3>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <a href="profile.html" 
+                           class="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-lg text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all shadow-sm hover:shadow-md">
+                            <i data-feather="user" class="h-5 w-5"></i>
+                            <span>Mi Perfil</span>
+                        </a>
+                        <a href="users.html" id="usersLink"
+                           class="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-lg text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all shadow-sm hover:shadow-md hidden">
+                            <i data-feather="users" class="h-5 w-5"></i>
+                            <span>Usuarios</span>
+                        </a>
+                        <a href="compose-email.html" id="emailLink"
+                           class="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-lg text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all shadow-sm hover:shadow-md hidden">
+                            <i data-feather="mail" class="h-5 w-5"></i>
+                            <span>Enviar Correo</span>
+                        </a>
+                        <a href="dashboard.html" id="dashboardLink"
+                           class="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-lg text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all shadow-sm hover:shadow-md hidden">
+                            <i data-feather="calendar" class="h-5 w-5"></i>
+                            <span>Períodos</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- UNAL Info -->
+                <div class="border-t border-gray-200 pt-8 text-center">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Universidad Nacional de Colombia</h3>
+                    <p class="text-gray-600 mb-4">
+                        Para más información sobre la institución, visita nuestro sitio web oficial:
+                    </p>
+                    <a href="https://unal.edu.co" 
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="inline-flex items-center gap-2 bg-purple-600 text-white px-8 py-3 rounded-lg hover:bg-purple-700 transition-colors shadow-md hover:shadow-lg">
+                        <i data-feather="external-link" class="h-5 w-5"></i>
+                        <span>Visitar unal.edu.co</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="mt-8 text-center text-gray-600">
+            <p class="flex items-center justify-center gap-2">
+                <i data-feather="info" class="h-4 w-4"></i>
+                <span>¿Necesitas ayuda? Contacta al administrador del sistema</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="components/navbar.js"></script>
+    <script>
+        // Check authentication
+        if (!Navbar.checkAuth()) {
+            window.location.href = 'login.html';
+        }
+
+        // Initialize navbar
+        const navbar = new Navbar();
+        navbar.render('navbar-container', { currentPage: 'home' });
+        
+        // Initialize Feather icons
+        feather.replace();
+
+        // Show/hide content based on user role
+        const userStr = localStorage.getItem('user') || '{}';
+        let user = {};
+        
+        try {
+            const parsed = JSON.parse(userStr);
+            user = typeof parsed === 'string' ? { email: parsed } : parsed;
+        } catch (e) {
+            user = { email: userStr };
+        }
+
+        const isAdmin = user.type_user && user.type_user.toLowerCase() === 'admin';
+
+        // Show content based on role
+        if (isAdmin) {
+            // Admin: show admin features and quick links
+            document.getElementById('adminFeatures').classList.remove('hidden');
+            document.getElementById('usersLink').classList.remove('hidden');
+            document.getElementById('emailLink').classList.remove('hidden');
+            document.getElementById('dashboardLink').classList.remove('hidden');
+        } else {
+            // Regular users: show university information
+            document.getElementById('userFeatures').classList.remove('hidden');
+            document.getElementById('userInfoCards').classList.remove('hidden');
+        }
+
+        // Re-replace icons after showing/hiding elements
+        feather.replace();
+    </script>
+</body>
+</html>

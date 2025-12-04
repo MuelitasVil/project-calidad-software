@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ORGSECURE - Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  <script src="components/navbar.js"></script>
+  <script src="components/footer.js"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Navbar Container -->
+  <div id="navbar-container"></div>
+
+  <!-- Main -->
+  <div class="bg-gray-100 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- 📘 Formulario Crear/Editar Periodo -->
+      <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-lg font-medium text-gray-800 mb-4">Crear / Actualizar Periodo</h2>
+        <form id="periodForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="cod_period" class="block text-sm font-medium text-gray-700">Código</label>
+            <input type="text" id="cod_period" required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          </div>
+          <div>
+            <label for="description" class="block text-sm font-medium text-gray-700">Descripción</label>
+            <input type="text" id="description" required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          </div>
+          <div>
+            <label for="initial_date" class="block text-sm font-medium text-gray-700">Fecha Inicio</label>
+            <input type="date" id="initial_date" required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          </div>
+          <div>
+            <label for="final_date" class="block text-sm font-medium text-gray-700">Fecha Fin</label>
+            <input type="date" id="final_date" required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          </div>
+          <div class="sm:col-span-2 flex gap-2">
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Guardar</button>
+            <button type="button" id="cancelEdit"
+              class="px-4 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500">Cancelar</button>
+          </div>
+        </form>
+        <div id="formMessage" class="mt-2 text-sm"></div>
+      </div>
+
+      <!-- 📘 Bloque Periodos a ancho limitado -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center mb-4">
+          <i data-feather="users" class="text-blue-500 mr-3"></i>
+          <h2 class="text-lg font-medium text-gray-800">Periodos Académicos</h2>
+        </div>
+        <p class="text-gray-600 mb-4">Listado de periodos académicos registrados:</p>
+
+        <!-- Contenedor tabla -->
+        <div class="overflow-x-auto relative">
+          <div id="loadingSpinner"
+            class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 hidden">
+            <div class="flex flex-col items-center">
+              <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              <p class="text-gray-600 text-sm mt-2">Cargando periodos...</p>
+            </div>
+          </div>
+
+          <table class="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Código</th>
+                <th class="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Descripción</th>
+                <th class="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Inicio</th>
+                <th class="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Fin</th>
+                <th class="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="periodTableBody" class="divide-y divide-gray-100 bg-white">
+              <tr>
+                <td colspan="5" class="text-center py-4 text-gray-500">Cargando...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    feather.replace();
+
+    const token = localStorage.getItem('authToken');
+    if (!token) window.location.href = 'login.html';
+
+    const spinner = document.getElementById('loadingSpinner');
+    const tableBody = document.getElementById('periodTableBody');
+    const form = document.getElementById('periodForm');
+    const formMessage = document.getElementById('formMessage');
+    const cancelEdit = document.getElementById('cancelEdit');
+
+    let editMode = false;
+    let editCod = '';
+
+    // 🔄 Listar periodos
+    async function loadPeriods() {
+      spinner.style.display = 'flex';
+      try {
+        const response = await fetch('http://localhost:8001/periods/', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error('Error al listar periodos');
+        const periods = await response.json();
+        tableBody.innerHTML = '';
+        if (periods.length === 0) {
+          tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-gray-500">No hay periodos</td></tr>`;
+        } else {
+          periods.forEach(p => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td class="px-4 py-2 text-sm text-gray-800">${p.cod_period}</td>
+              <td class="px-4 py-2 text-sm text-gray-600">${p.description}</td>
+              <td class="px-4 py-2 text-sm text-gray-600">${p.initial_date}</td>
+              <td class="px-4 py-2 text-sm text-gray-600">${p.final_date}</td>
+              <td class="px-4 py-2 text-sm text-gray-600 flex gap-2">
+                <button class="editBtn px-2 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500" data-cod="${p.cod_period}">Editar</button>
+                <button class="deleteBtn px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600" data-cod="${p.cod_period}">Eliminar</button>
+              </td>
+            `;
+            tableBody.appendChild(row);
+          });
+
+          // Asignar eventos a botones
+          document.querySelectorAll('.editBtn').forEach(btn => {
+            btn.addEventListener('click', () => startEdit(btn.dataset.cod));
+          });
+          document.querySelectorAll('.deleteBtn').forEach(btn => {
+            btn.addEventListener('click', () => deletePeriod(btn.dataset.cod));
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-red-500">Error al cargar los periodos</td></tr>`;
+      } finally {
+        spinner.style.display = 'none';
+      }
+    }
+
+    // Crear o actualizar periodo
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const cod_period = document.getElementById('cod_period').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const initial_date = document.getElementById('initial_date').value;
+      const final_date = document.getElementById('final_date').value;
+
+      const body = { cod_period, description, initial_date, final_date };
+
+      try {
+        formMessage.textContent = '';
+        let response;
+        if (editMode) {
+          response = await fetch(`http://localhost:8001/periods/${editCod}`, {
+            method: 'PATCH',
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          });
+        } else {
+          response = await fetch('http://localhost:8001/periods/', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          });
+        }
+
+        if (!response.ok) throw new Error('Error al guardar el periodo');
+
+        formMessage.textContent = editMode ? 'Periodo actualizado' : 'Periodo creado';
+        formMessage.className = 'text-green-600 mt-2';
+        form.reset();
+        editMode = false;
+        editCod = '';
+        loadPeriods();
+      } catch (err) {
+        console.error(err);
+        formMessage.textContent = 'Error al guardar el periodo';
+        formMessage.className = 'text-red-600 mt-2';
+      }
+    });
+
+    // Cancelar edición
+    cancelEdit.addEventListener('click', () => {
+      form.reset();
+      editMode = false;
+      editCod = '';
+      formMessage.textContent = '';
+    });
+
+    // Iniciar edición
+    async function startEdit(cod) {
+      const response = await fetch('http://localhost:8001/periods/', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const periods = await response.json();
+      const period = periods.find(p => p.cod_period === cod);
+      if (!period) return;
+      document.getElementById('cod_period').value = period.cod_period;
+      document.getElementById('description').value = period.description;
+      document.getElementById('initial_date').value = period.initial_date;
+      document.getElementById('final_date').value = period.final_date;
+      editMode = true;
+      editCod = cod;
+    }
+
+    // Eliminar periodo
+    async function deletePeriod(cod) {
+      if (!confirm(`¿Eliminar periodo ${cod}?`)) return;
+      try {
+        const response = await fetch(`http://localhost:8001/periods/${cod}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error('Error al eliminar');
+        loadPeriods();
+      } catch (err) {
+        alert('Error al eliminar el periodo');
+        console.error(err);
+      }
+    }
+
+    loadPeriods();
+  </script>
+
+  <!-- Footer Container -->
+  <div id="footer-container"></div>
+
+  <!-- Inicializar componentes PRIMERO -->
+  <script>
+    // Verificar autenticación y renderizar componentes
+    Navbar.checkAuth();
+
+    const navbar = new Navbar();
+    navbar.render('navbar-container', { currentPage: 'dashboard' });
+
+    const footer = new Footer();
+    footer.render('footer-container', { theme: 'light', showLinks: true });
+    
+    // Ahora que el navbar existe, podemos cargar períodos
+    // (el código de períodos ya se ejecutó arriba)
+  </script>
+
+</body>
+
+</html>

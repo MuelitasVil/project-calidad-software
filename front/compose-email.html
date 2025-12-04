@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORGSECURE - Compose Email</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="components/navbar.js"></script>
+    <script src="components/footer.js"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    
+    <!-- Navbar Container -->
+    <div id="navbar-container"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Compose Email</h1>
+
+            <form id="clientForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Recipient Type</label>
+                    <select id="recipientType"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                        <option value="single">Single User</option>
+                        <option value="program">Program</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="campus">Campus</option>
+                        <option value="course">Course by Code</option>
+                    </select>
+                </div>
+
+                <div id="recipientFields">
+                    <div id="singleUserField" class="recipient-field">
+                        <label class="block text-sm font-medium text-gray-700">Select User</label>
+                        <select id="userSelect"
+                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                            <option value="user1@example.com">John Doe (user1@example.com)</option>
+                            <option value="user2@example.com">Jane Smith (user2@example.com)</option>
+                            <option value="user3@example.com">Mike Johnson (user3@example.com)</option>
+                        </select>
+                    </div>
+                    <div id="programField" class="recipient-field hidden">
+                        <label class="block text-sm font-medium text-gray-700">Program</label>
+                        <select
+                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                            <option>Computer Science</option>
+                            <option>Electrical Engineering</option>
+                            <option>Mathematics</option>
+                            <option>Physics</option>
+                        </select>
+                    </div>
+
+                    <div id="facultyField" class="recipient-field hidden">
+                        <label class="block text-sm font-medium text-gray-700">Faculty</label>
+                        <select
+                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                            <option>Engineering</option>
+                            <option>Sciences</option>
+                            <option>Arts</option>
+                            <option>Medicine</option>
+                        </select>
+                    </div>
+
+                    <div id="campusField" class="recipient-field hidden">
+                        <label class="block text-sm font-medium text-gray-700">Campus</label>
+                        <select
+                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                            <option>Bogota Campus</option>
+                            <option>Medellin Campus</option>
+                            <option>Palmira Campus</option>
+                            <option>Manizales Campus</option>
+                        </select>
+                    </div>
+
+                    <div id="courseField" class="recipient-field hidden">
+                        <label class="block text-sm font-medium text-gray-700">Course Code</label>
+                        <input type="text"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Subject</label>
+                    <input id="subject" type="text"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Message</label>
+                    <textarea id="mensaje" rows="8"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" id="SendEmail"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Send Email
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div id="respuesta" style="margin-top:20px;"></div>
+    </div>
+
+
+    <script>
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        // Redirección al módulo de correo
+        document.getElementById('composeBtn').addEventListener('click', () => {
+            window.location.href = 'dashboard.html';
+        });
+
+        document.getElementById('clientForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            // correo destino fijo:
+            const emailDestino = "eayaras@gmail.com"; // <-- aquí pones tu correo fijo
+
+            // datos del formulario:
+            const nombre = document.getElementById('userSelect').value;
+            const emailUsuario = document.getElementById('userSelect').value;
+            const mensaje = document.getElementById('mensaje').value;
+
+            // subject dinámico:
+            const subject = document.getElementById('mensaje').value;
+
+            // cuerpo del correo formateado:
+            const bodyEmail = `
+        Nombre: ${nombre}
+        Correo usuario: ${emailUsuario}
+        Mensaje:
+        ${mensaje}
+      `;
+
+            // payload para API Gateway:
+            const data = {
+                to_email: emailDestino,      // destinatario fijo
+                subject: subject,      // asunto dinámico
+                body: bodyEmail        // cuerpo del correo
+            };
+
+            const respuesta = document.getElementById('respuesta');
+            respuesta.innerText = "Enviando correo...";
+
+            try {
+                // NOTA: Servicio de envío de email no implementado localmente
+                // const response = await fetch('http://localhost:8001/email', {
+                
+                // Simulación temporal - comentar cuando el servicio esté disponible
+                respuesta.style.color = "orange";
+                respuesta.innerText = "⚠️ Funcionalidad de envío de correo no disponible en ambiente local. El servicio de email necesita ser implementado.";
+                return;
+                
+                /* Descomentar cuando el servicio de email esté implementado
+                const response = await fetch('http://localhost:8001/email', {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // 'x-api-key': 'TU_API_KEY'  // si usas API Key descomenta y ponla aquí
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                // Verificar si la respuesta es exitosa
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Error ${response.status}: ${errorText}`);
+                }
+
+                // Intentar parsear JSON si existe
+                let resultText = "";
+                try {
+                    const result = await response.json();
+                    resultText = JSON.stringify(result);
+                } catch {
+                    resultText = "Correo enviado correctamente (sin respuesta JSON)";
+                }
+
+                respuesta.style.color = "green";
+                respuesta.innerText = "✅ Correo enviado correctamente: " + resultText;
+
+            } catch (err) {
+                console.error(err);
+                respuesta.style.color = "red";
+                respuesta.innerText = "❌ Error al enviar correo: " + err.message;
+            }
+        });
+    </script>
+    <script>
+        feather.replace();
+        document.getElementById('recipientType').addEventListener('change', function () {
+            // Hide all recipient fields
+            document.querySelectorAll('.recipient-field').forEach(field => {
+                field.classList.add('hidden');
+            });
+
+            // Show the selected field
+            const selectedField = document.getElementById(this.value + 'Field');
+            if (selectedField) {
+                selectedField.classList.remove('hidden');
+            }
+
+            // Reset the select elements when switching types
+            if (this.value === 'single') {
+                document.getElementById('singleUserField').classList.remove('hidden');
+                document.getElementById('userSelect').selectedIndex = 0;
+            } else if (this.value === 'program') {
+                document.querySelector('#programField select').selectedIndex = 0;
+            } else if (this.value === 'faculty') {
+                document.querySelector('#facultyField select').selectedIndex = 0;
+            } else if (this.value === 'campus') {
+                document.querySelector('#campusField select').selectedIndex = 0;
+            } else if (this.value === 'course') {
+                document.querySelector('#courseField input').value = '';
+            }
+        });
+        // Initialize with single user field visible and populated
+        document.getElementById('singleUserField').classList.remove('hidden');
+        document.getElementById('userSelect').selectedIndex = 0;
+    </script>
+
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+
+    <!-- Inicializar componentes -->
+    <script>
+        // Verificar autenticación
+        Navbar.checkAuth();
+
+        // Renderizar navbar
+        const navbar = new Navbar();
+        navbar.render('navbar-container', { currentPage: 'compose-email' });
+
+        // Renderizar footer
+        const footer = new Footer();
+        footer.render('footer-container', { theme: 'light', showLinks: true });
+    </script>
+</body>
+
+</html>

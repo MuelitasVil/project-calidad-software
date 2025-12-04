@@ -30,6 +30,19 @@ CREATE TABLE IF NOT EXISTS user_unal (
     birth_date  DATE         NULL
 ) ENGINE=InnoDB;
 
+-- Tabla: user_contact_data
+CREATE TABLE IF NOT EXISTS user_contact_data (
+    id              INT          AUTO_INCREMENT PRIMARY KEY,
+    email_unal      VARCHAR(100) NOT NULL,
+    personal_email  VARCHAR(100) NULL,
+    phone_number    VARCHAR(20)  NULL,
+    vehicle_plate   VARCHAR(20)  NULL,
+    created_at      DATETIME     DEFAULT CURRENT_TIMESTAMP,
+    updated_at      DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_contact_user FOREIGN KEY (email_unal) REFERENCES user_unal(email_unal) ON DELETE CASCADE ON UPDATE CASCADE,
+    INDEX idx_contact_email (email_unal)
+) ENGINE=InnoDB;
+
 -- Tabla: user_workspace_associate  (PK compuesta y FK a user_workspace)
 CREATE TABLE IF NOT EXISTS user_workspace_associate (
     email_unal        VARCHAR(100) NOT NULL,
