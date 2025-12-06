@@ -107,6 +107,28 @@ services:
     restart: unless-stopped
 
   # ============================================
+  # Frontend Tests Service
+  # ============================================
+  frontend-tests:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+      target: test
+    container_name: frontend-tests
+    environment:
+      - DOCKER_ENV=true
+      - BASE_URL=http://frontend:80  # Use service name when on same network
+      - AUTH_API=http://auth-service:8000
+      - USERS_API=http://users-service:8001
+    networks:
+      - app-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    profiles:
+      - test
+    command: tail -f /dev/null  # Keep container running for manual test execution
+
+  # ============================================
   # LocalStack (AWS services emulator with DynamoDB UI)
   # ============================================
   localstack:

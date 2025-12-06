@@ -6,6 +6,7 @@
 .PHONY: recreate recreate-auth
 .PHONY: mysql-native-auth
 .PHONY: verify-dynamodb backup-db restore-db seed-admin
+.PHONY: test-frontend test-frontend-unit test-frontend-integration
 
 # Detectar qué comando de docker compose está disponible:
 # - `docker-compose` (legacy)
@@ -39,8 +40,13 @@ help:
 	@echo "  make restore-db      - Restaurar tablas DynamoDB desde backup"
 	@echo "  make seed-admin      - Crear usuario admin (mhoyos@example.com)"
 	@echo ""
-		@echo "  make recreate        - Reconstruir y forzar recrear todos los servicios"
-		@echo "  make recreate-auth   - Forzar reconstrucción del servicio auth"
+	@echo "  🧪 Frontend Tests (Docker):"
+	@echo "  make test-frontend           - Ejecutar todos los tests frontend"
+	@echo "  make test-frontend-unit      - Ejecutar solo tests unitarios"
+	@echo "  make test-frontend-integration - Ejecutar solo tests de integración"
+	@echo ""
+	@echo "  make recreate        - Reconstruir y forzar recrear todos los servicios"
+	@echo "  make recreate-auth   - Forzar reconstrucción del servicio auth"
 build:
 	@echo "🔨 Construyendo imágenes Docker..."
 	$(DOCKER_COMPOSE) build
@@ -147,3 +153,19 @@ push-auth: build-auth-prod
 	 docker push $(ACCOUNT_ID).dkr.ecr.$(REGION).amazonaws.com/auth-service:$(TAG)
 
 prod-all: push-users push-auth
+
+# ===================================
+# Frontend Tests (Docker)
+# ===================================
+
+test-frontend:
+	@echo "🧪 Running all frontend tests in Docker..."
+	@$(DOCKER_COMPOSE) --profile test run --rm frontend-tests pytest -v
+
+test-frontend-unit:
+	@echo "🧪 Running frontend unit tests in Docker..."
+	@$(DOCKER_COMPOSE) --profile test run --rm frontend-tests pytest -m unit -v
+
+test-frontend-integration:
+	@echo "🧪 Running frontend integration tests in Docker..."
+	@$(DOCKER_COMPOSE) --profile test run --rm frontend-tests pytest -m integration -v -s
