@@ -1,3 +1,27 @@
+# Stage 1: Test environment (for running tests)
+FROM python:3.12-slim as test
+
+WORKDIR /app
+
+# Install system dependencies and Chromium (simpler than Chrome)
+RUN apt-get update && apt-get install -y \
+    chromium \
+    chromium-driver \
+    wget \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install test dependencies
+COPY requirements-test.txt .
+RUN pip install --no-cache-dir -r requirements-test.txt
+
+# Copy test files
+COPY tests/ /app/tests/
+
+# Set working directory to tests
+WORKDIR /app/tests
+
+# Stage 2: Production nginx server
 FROM nginx:alpine
 
 # Copiar archivos HTML y recursos estáticos
