@@ -141,4 +141,80 @@ class AuthService:
         """Obtiene el tipo de usuario por su email"""
         repo = AuthRepository(get_dynamo_client())
         return repo.get_user_type_by_email(e_mail)
+    
+    @staticmethod
+    def validate_credentials(e_mail: str, password: str) -> SystemUser | None:
+        """
+        Valida credenciales de usuario sin generar token
+        
+        Args:
+            e_mail: Email del usuario
+            password: Contraseña en texto plano
+            
+        Returns:
+            SystemUser si las credenciales son válidas, None si no
+        """
+        repo = AuthRepository(get_dynamo_client())
+        user = repo.get_user_by_email(e_mail)
 
+        if not user or not user.state:
+            return None
+
+        if not pwd_context.verify(password, user.hashed_password):
+            return None
+
+        return user
+    
+    @staticmethod
+    def generate_token_for_user(e_mail: str) -> dict | None:
+        """
+        Genera token JWT para un usuario (después de validar OTP)
+        
+        Args:
+            e_mail: Email del usuario
+            
+        Returns:
+            Dict con token y datos del usuario
+        """
+        repo = AuthRepository(get_dynamo_client())
+        user = repo.get_user_by_email(e_mail)
+
+        if not user or not user.state:
+            return None
+
+        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        payload = {"sub": user.e_mail, "exp": expire, "type_user": user.type_user}
+
+        # Crear JWT
+        jwt_token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+        # Guardar token en DynamoDB
+        repo.create_token(
+            Token(
+                token=jwt_token,
+                e_mail=user.e_mail,
+                created_at=datetime.utcnow()
+            )
+        )
+        
+        return {
+            "token": jwt_token,
+            "user": {
+                "email": user.e_mail,
+                "type_user": user.type_user
+            }
+        }
+    
+    @staticmethod
+    def get_user_by_email(e_mail: str) -> SystemUser | None:
+        """
+        Obtiene un usuario por su email
+        
+        Args:
+            e_mail: Email del usuario
+            
+        Returns:
+            SystemUser si existe, None si no
+        """
+        repo = AuthRepository(get_dynamo_client())
+        return repo.get_user_by_email(e_mail)

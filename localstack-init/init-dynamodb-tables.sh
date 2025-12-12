@@ -82,6 +82,24 @@ else
     --region us-east-1
 fi
 
+# ============================================
+# Tabla 4: auth_ms_otp
+# ============================================
+if table_exists "auth_ms_otp"; then
+  echo "✅ Tabla auth_ms_otp ya existe (preservando datos)"
+else
+  echo "📝 Creando tabla: auth_ms_otp (PK: e_mail)"
+  aws dynamodb create-table \
+    --table-name auth_ms_otp \
+    --attribute-definitions \
+      AttributeName=e_mail,AttributeType=S \
+    --key-schema \
+      AttributeName=e_mail,KeyType=HASH \
+    --billing-mode PAY_PER_REQUEST \
+    --endpoint-url http://localhost:4566 \
+    --region us-east-1
+fi
+
 echo ""
 echo "✅ Tablas DynamoDB creadas exitosamente!"
 echo ""
