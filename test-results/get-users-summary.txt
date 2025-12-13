@@ -1,0 +1,34 @@
+     ✓ GET list - status is 200
+     ✓ GET list - response time < 400ms
+     ✓ GET list - has body
+     ✓ GET list - is JSON
+     ✓ GET list - has results
+     ✓ GET list - has users
+     ✓ GET list - user has email
+     ✓ GET list - user has document
+     ✓ GET list - user has name
+     ✓ GET pagination - status is 200
+     ✓ GET pagination - response time < 400ms
+     ✓ GET pagination - has body
+     ✓ GET pagination - has pagination info
+     ✓ GET search - status is 200
+     ✓ GET search - response time < 400ms
+     ✓ GET search - has body
+
+     checks.........................: 100.00% ✓ 5865      ✗ 0   
+     data_received..................: 61 MB   982 kB/s
+     data_sent......................: 72 kB   1.2 kB/s
+     http_req_blocked...............: avg=24.19µs  min=3.49µs   med=10.69µs  max=2.02ms   p(90)=18.9µs   p(95)=21.77µs 
+     http_req_connecting............: avg=8.96µs   min=0s       med=0s       max=1.24ms   p(90)=0s       p(95)=0s      
+   ✓ http_req_duration..............: avg=48.09ms  min=9.42ms   med=38.06ms  max=376.8ms  p(90)=92.88ms  p(95)=119.2ms 
+       { expected_response:true }...: avg=48.09ms  min=9.42ms   med=38.06ms  max=376.8ms  p(90)=92.88ms  p(95)=119.2ms 
+   ✓ http_req_failed................: 0.00%   ✓ 0         ✗ 819 
+     http_req_receiving.............: avg=205.65µs min=51.6µs   med=147.95µs max=3.59ms   p(90)=366.57µs p(95)=493.65µs
+     http_req_sending...............: avg=42.27µs  min=9.79µs   med=36.05µs  max=375.32µs p(90)=74.34µs  p(95)=87.03µs 
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=47.85ms  min=9.34ms   med=37.84ms  max=376.64ms p(90)=92.71ms  p(95)=118.91ms
+   ✗ http_reqs......................: 819     13.293597/s
+     iteration_duration.............: avg=1.11s    min=335.54ms med=1.11s    max=2.05s    p(90)=1.7s     p(95)=1.77s   
+     iterations.....................: 818     13.277365/s
+     vus............................: 6       min=6       max=15
+     vus_max........................: 15      min=15      max=15
