@@ -1,0 +1,37 @@
+     ✓ GET pagination - status is 200
+     ✗ GET pagination - response time < 400ms
+      ↳  83% — ✓ 127 / ✗ 25
+     ✓ GET pagination - has body
+     ✓ GET pagination - has pagination info
+     ✓ GET list - status is 200
+     ✗ GET list - response time < 400ms
+      ↳  85% — ✓ 433 / ✗ 75
+     ✓ GET list - has body
+     ✓ GET list - is JSON
+     ✓ GET list - has results
+     ✓ GET list - has users
+     ✓ GET list - user has email
+     ✓ GET list - user has document
+     ✓ GET list - user has name
+     ✓ GET search - status is 200
+     ✗ GET search - response time < 400ms
+      ↳  96% — ✓ 25 / ✗ 1
+     ✓ GET search - has body
+
+     checks.........................: 98.07% ✓ 5157      ✗ 101 
+     data_received..................: 170 MB 2.8 MB/s
+     data_sent......................: 59 kB  957 B/s
+     http_req_blocked...............: avg=19.92µs  min=3.32µs   med=6.84µs   max=957.4µs  p(90)=11.37µs  p(95)=19.39µs 
+     http_req_connecting............: avg=9.63µs   min=0s       med=0s       max=787.77µs p(90)=0s       p(95)=0s      
+   ✗ http_req_duration..............: avg=214.34ms min=26.47ms  med=152.51ms max=1.39s    p(90)=456.88ms p(95)=528.66ms
+       { expected_response:true }...: avg=214.34ms min=26.47ms  med=152.51ms max=1.39s    p(90)=456.88ms p(95)=528.66ms
+   ✓ http_req_failed................: 0.00%  ✓ 0         ✗ 687 
+     http_req_receiving.............: avg=517.67µs min=103.61µs med=329.5µs  max=10.47ms  p(90)=827.13µs p(95)=1.31ms  
+     http_req_sending...............: avg=30.56µs  min=8.54µs   med=22.25µs  max=490.59µs p(90)=43.77µs  p(95)=69.68µs 
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=213.79ms min=26.33ms  med=152.19ms max=1.39s    p(90)=456.3ms  p(95)=527.62ms
+   ✗ http_reqs......................: 687    11.140348/s
+     iteration_duration.............: avg=1.32s    min=418.07ms med=1.36s    max=2.76s    p(90)=1.88s    p(95)=2.04s   
+     iterations.....................: 686    11.124132/s
+     vus............................: 7      min=7       max=15
+     vus_max........................: 15     min=15      max=15
