@@ -24,10 +24,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 
-@pytest.mark.integration
+@pytest.mark.end_to_end
 @pytest.mark.slow
 class TestGuestRegistrationAndProfileEdit:
-    """Integration test for complete guest user flow"""
+    """End-to-end test for complete guest user flow (UI + Backend)"""
     
     def test_complete_guest_registration_and_profile_edit_flow(
         self, driver, base_url, wait, clean_local_storage, unique_email, test_password
