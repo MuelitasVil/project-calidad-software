@@ -55,6 +55,10 @@ elif [ "$ARG" == "integration" ]; then
     # Run all integration tests
     echo -e "${GREEN}Running integration tests...${NC}"
     docker compose --profile test run --rm frontend-tests pytest -m integration -v -s
+elif [ "$ARG" == "end-to-end" ]; then
+    # Run all end-to-end tests
+    echo -e "${GREEN}Running end-to-end tests...${NC}"
+    docker compose --profile test run --rm frontend-tests pytest -m end_to_end -v -s
 elif [ "$ARG" == "all" ]; then
     # Run all tests
     echo -e "${GREEN}Running all tests...${NC}"

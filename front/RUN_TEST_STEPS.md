@@ -20,8 +20,12 @@ Choose one of these methods:
 ./front/run-tests.sh integration
 # Run all unit tests
 ./front/run-tests.sh unit
+# Run all end to end tests
+./front/run-tests.sh end-to-end
 # Run a specific test file
-./front/run-tests.sh integration-tests/test_guest_registration_and_profile_edit.py
+./front/run-tests.sh integration-tests/test_guest_registration_integration.py
+# or
+./front/run-tests.sh end-to-end-tests/test_guest_registration_and_profile_edit.py
 # Run all tests
 ./front/run-tests.sh all
 # or
@@ -77,7 +81,8 @@ sleep 5
 ## What Gets Tested
 
 - **Unit Tests**: Individual form components (login, register, profile)
-- **Integration Tests**: Complete user flow (register → login → edit profile)
+- **Integration Tests**: API endpoints and database verification (no UI)
+- **End-to-End Tests**: Complete UI flow with Selenium (register → login → edit profile)
 
 All tests run in Docker - no local dependencies needed!
 
