@@ -87,9 +87,9 @@ export function handleSummary(data) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
   
   return {
-    'test-results/create-users-summary.html': htmlReport(data),
-    'test-results/create-users-summary.json': JSON.stringify(data, null, 2),
-    'test-results/create-users-summary.txt': textSummary(data, { indent: ' ', enableColors: false }),
+    '/work/test-results/create-users-summary.html': htmlReport(data),
+    '/work/test-results/create-users-summary.json': JSON.stringify(data, null, 2),
+    '/work/test-results/create-users-summary.txt': textSummary(data, { indent: ' ', enableColors: false }),
     stdout: textSummary(data, { indent: ' ', enableColors: true }),
   };
 }

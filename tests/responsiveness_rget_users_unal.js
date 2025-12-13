@@ -126,9 +126,9 @@ export function handleSummary(data) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
   
   return {
-    'test-results/get-users-summary.html': htmlReport(data),
-    'test-results/get-users-summary.json': JSON.stringify(data, null, 2),
-    'test-results/get-users-summary.txt': textSummary(data, { indent: ' ', enableColors: false }),
+    '/work/test-results/get-users-summary.html': htmlReport(data),
+    '/work/test-results/get-users-summary.json': JSON.stringify(data, null, 2),
+    '/work/test-results/get-users-summary.txt': textSummary(data, { indent: ' ', enableColors: false }),
     stdout: textSummary(data, { indent: ' ', enableColors: true }),
   };
 }
